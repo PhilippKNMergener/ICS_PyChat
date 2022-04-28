@@ -31,6 +31,9 @@ class Server:
         # initialize past chat indices
         self.indices = {}
         # sonnet
+        # self.sonnet_f = open('AllSonnets.txt.idx', 'rb')
+        # self.sonnet = pkl.load(self.sonnet_f)
+        # self.sonnet_f.close()
         self.sonnet = indexer.PIndex("AllSonnets.txt")
 
     def new_client(self, sock):
@@ -44,9 +47,12 @@ class Server:
         # read the msg that should have login code plus username
         try:
             msg = json.loads(myrecv(sock))
+            print("login:", msg)
             if len(msg) > 0:
+
                 if msg["action"] == "login":
                     name = msg["name"]
+
                     if self.group.is_member(name) != True:
                         # move socket from new clients list to logged clients
                         self.new_clients.remove(sock)
@@ -57,7 +63,7 @@ class Server:
                         if name not in self.indices.keys():
                             try:
                                 self.indices[name] = pkl.load(
-                                    open(name + '.idx', 'rb'))
+                                    open(name+'.idx', 'rb'))
                             except IOError:  # chat index does not exist, then create one
                                 self.indices[name] = indexer.Index(name)
                         print(name + ' logged in')
@@ -94,7 +100,7 @@ class Server:
         msg = myrecv(from_sock)
         if len(msg) > 0:
             # ==============================================================================
-            # handle connect request this is implemented for you
+            # handle connect request
             # ==============================================================================
             msg = json.loads(msg)
             if msg["action"] == "connect":
@@ -118,30 +124,59 @@ class Server:
                         {"action": "connect", "status": "no-user"})
                 mysend(from_sock, msg)
 # ==============================================================================
-# handle messeage exchange: IMPLEMENT THIS
+# handle messeage exchange: one peer for now. will need multicast later
 # ==============================================================================
             elif msg["action"] == "exchange":
                 from_name = self.logged_sock2name[from_sock]
-                """
-                Finding the list of people to send to and index message
-                """
-                # IMPLEMENTATION
-                # ---- start your code ---- #
-                out_msg = msg["message"]
-                
-                # ---- end of your code --- #
-
-                THE_BOYYYYS = self.group.list_me(from_name)[1:]
-                for g in THE_BOYYYYS:
+                the_guys = self.group.list_me(from_name)
+                #said = msg["from"]+msg["message"]
+                said2 = text_proc(msg["message"], from_name)
+                self.indices[from_name].add_msg_and_index(said2)
+                for g in the_guys[1:]:
                     to_sock = self.logged_name2sock[g]
-
-                    # IMPLEMENTATION
-                    # ---- start your code ---- #
-                    self.indices[g].add_msg_and_index(out_msg)
-                    mysend(to_sock, out_msg)
-
-                    # ---- end of your code --- #
-
+                    self.indices[g].add_msg_and_index(said2)
+                    mysend(to_sock, json.dumps(
+                        {"action": "exchange", "from": msg["from"], "message": msg["message"]}))
+# ==============================================================================
+#                 listing available peers
+# ==============================================================================
+            elif msg["action"] == "list":
+                from_name = self.logged_sock2name[from_sock]
+                msg = self.group.list_all()
+                mysend(from_sock, json.dumps(
+                    {"action": "list", "results": msg}))
+# ==============================================================================
+#             retrieve a sonnet
+# ==============================================================================
+            elif msg["action"] == "poem":
+                poem_indx = int(msg["target"])
+                from_name = self.logged_sock2name[from_sock]
+                print(from_name + ' asks for ', poem_indx)
+                poem = self.sonnet.get_poem(poem_indx)
+                poem = '\n'.join(poem).strip()
+                print('here:\n', poem)
+                mysend(from_sock, json.dumps(
+                    {"action": "poem", "results": poem}))
+# ==============================================================================
+#                 time
+# ==============================================================================
+            elif msg["action"] == "time":
+                ctime = time.strftime('%d.%m.%y,%H:%M', time.localtime())
+                mysend(from_sock, json.dumps(
+                    {"action": "time", "results": ctime}))
+# ==============================================================================
+#                 search
+# ==============================================================================
+            elif msg["action"] == "search":
+                term = msg["target"]
+                from_name = self.logged_sock2name[from_sock]
+                print('search for ' + from_name + ' for ' + term)
+                # search_rslt = (self.indices[from_name].search(term))
+                search_rslt = '\n'.join(
+                    [x[-1] for x in self.indices[from_name].search(term)])
+                print('server side search: ' + search_rslt)
+                mysend(from_sock, json.dumps(
+                    {"action": "search", "results": search_rslt}))
 # ==============================================================================
 # the "from" guy has had enough (talking to "to")!
 # ==============================================================================
@@ -153,56 +188,7 @@ class Server:
                 if len(the_guys) == 1:  # only one left
                     g = the_guys.pop()
                     to_sock = self.logged_name2sock[g]
-                    mysend(to_sock, json.dumps(
-                        {"action": "disconnect", "msg": "everyone left, you are alone"}))
-# ==============================================================================
-#                 listing available peers: IMPLEMENT THIS
-# ==============================================================================
-            elif msg["action"] == "list":
-
-                # IMPLEMENTATION
-                # ---- start your code ---- #
-                name = self.logged_sock2name[from_sock]
-                msg = self.group.list_me(name)
-
-                # ---- end of your code --- #
-                mysend(from_sock, json.dumps(
-                    {"action": "list", "results": msg}))
-# ==============================================================================
-#             retrieve a sonnet : IMPLEMENT THIS
-# ==============================================================================
-            elif msg["action"] == "poem":
-
-                # IMPLEMENTATION
-                # ---- start your code ---- #
-                n = msg["target"]
-                poem = self.sonnet.get_poem(n)
-                print('here:\n', poem)
-                # ---- end of your code --- #
-
-                mysend(from_sock, json.dumps(
-                    {"action": "poem", "results": poem}))
-# ==============================================================================
-#                 time
-# ==============================================================================
-            elif msg["action"] == "time":
-                ctime = time.strftime('%d.%m.%y,%H:%M', time.localtime())
-                mysend(from_sock, json.dumps(
-                    {"action": "time", "results": ctime}))
-# ==============================================================================
-#                 search: : IMPLEMENT THIS
-# ==============================================================================
-            elif msg["action"] == "search":
-
-                # IMPLEMENTATION
-                # ---- start your code ---- #
-                name = self.logged_sock2name[from_sock]
-                search_term = msg["target"]
-                search_rslt = self.indices[name].search(search_term)
-                print('server side search: ' + search_rslt)
-                mysend(from_sock, json.dumps(
-                    {"action": "search", "results": search_rslt}))
-
+                    mysend(to_sock, json.dumps({"action": "disconnect"}))
 # ==============================================================================
 #                 the "from" guy really, really has had enough
 # ==============================================================================
@@ -216,7 +202,7 @@ class Server:
 # ==============================================================================
     def run(self):
         print('starting server...')
-        while(69 == 69): # nice
+        while(1):
             read, write, error = select.select(self.all_sockets, [], [])
             print('checking logged clients..')
             for logc in list(self.logged_name2sock.values()):
@@ -238,5 +224,5 @@ def main():
     server.run()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

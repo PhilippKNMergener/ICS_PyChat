@@ -25,6 +25,7 @@ _ml_|_mm_|_mr_
         self.resources = self.resources()
         self.game_board = self.resources.clean_board
         self.board_index = self.resources.board_index
+        self.board_matrix = self.resources.board_matrix
         self.moves_played = 0
         self.players = self.resources.players
         self.opening_text = self.resources.opening_text
@@ -50,29 +51,41 @@ _ml_|_mm_|_mr_
                 if pos == "!help":
                     print("The position names are:")
                     print(self.resources.board_key)
-                    continue
                 else:
                     self.play_move(player, pos)
+                    return 
             except Exception as e:
                 print(e)
                 continue
     
     def check_for_win(self, player):
+        check_row = []
+        check_col = []
         for i in range(3): 
             for j in range(3):
-                pass
+                check_row.append(self.board_matrix[i][j])
+                check_col.append(self.board_matrix[j][i])
+            row_occupied_by_player = [self.game_board[self.board_index[x]] == player for x in check_row]
+            col_occupied_by_player = [self.game_board[self.board_index[x]] == player for x in check_col]
+            won = all(row_occupied_by_player) or all(col_occupied_by_player)
+            if won:
+                return True
+            check_row, check_col = [], []
+        return False
+
 
     def play(self):
+        replay = True
         print(self.opening_text)
         input("PRESS ENTER TO PLAY")
-        while True:
+        print(self.game_board)
+        while replay:
             player_move = self.players[self.to_play]
-            print(self.game_board)
             self.prompt_move(player_move)
+            print(self.game_board)
             self.to_play = 0 if self.to_play else 1
-            if self.check_for_win(player_move, move):
-                print(f"\"{self.players[player_move]}\" WON!!")
-                replay = True
+            if self.check_for_win(player_move):
+                print(f"\"{self.players[self.to_play]}\" WON!!")
                 while replay:
                     play_again = input("Would you like to play again (Y/N)? ")
                     if play_again in ["Y", "N"]:
@@ -80,11 +93,14 @@ _ml_|_mm_|_mr_
                             replay = False
                         if play_again == "Y":
                             replay = True
+                            self.to_play = 0
                             break
                     else: 
                         print("Invalid Input - Enter \"Y\" for yes or \"N\" for no")
                         replay = True 
                         continue
+        print("Thanks For Playing!!!")
+                    
     
     def replay() -> bool:
         pass

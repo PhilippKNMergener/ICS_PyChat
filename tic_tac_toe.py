@@ -40,12 +40,11 @@ _ml_|_mm_|_mr_
             raise Exception("Position Occupied")
             return 
         self.game_board = self.game_board[:pos_index] + player + self.game_board[pos_index+1:]
-        return
 
     def prompt_move(self, player:str):
+        print(f"It is \"{player}\"\'s move!")
         while True:
             try:
-                print(f"It is \"{player}\"\'s move!")
                 print(f"(to see valid positions type '!help'")
                 pos = input("Where would you like to place? ")
                 if pos == "!help":
@@ -57,10 +56,11 @@ _ml_|_mm_|_mr_
             except Exception as e:
                 print(e)
                 continue
-            break
     
     def check_for_win(self, player):
-        pass
+        for i in range(3): 
+            for j in range(3):
+                pass
 
     def play(self):
         print(self.opening_text)
@@ -70,7 +70,7 @@ _ml_|_mm_|_mr_
             print(self.game_board)
             self.prompt_move(player_move)
             self.to_play = 0 if self.to_play else 1
-            if self.check_for_win(player_move):
+            if self.check_for_win(player_move, move):
                 print(f"\"{self.players[player_move]}\" WON!!")
                 replay = True
                 while replay:

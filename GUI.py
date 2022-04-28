@@ -17,7 +17,6 @@ import json
 
 # GUI class for the chat
 
-
 class GUI:
     # constructor method
     def __init__(self, send, recv, sm, s):

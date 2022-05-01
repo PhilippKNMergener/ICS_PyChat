@@ -227,5 +227,5 @@ class GUI:
 
 # create a GUI class object
 if __name__ == "__main__":
-    # g = GUI()
+    #g = GUI(None, None, None, None)
     pass

@@ -38,13 +38,16 @@ class Main_GUI:
     def setup_chat_window(self):
         # New window for the group chat
         self.chat_window = tk.Toplevel(self.root)
+        self.chat_window.title("PyChat")
         self.chat_window.resizable(
                                     width=True,
                                     height=True)
         self.chat_window.configure(
                                     width=800, 
                                     height=800)
-        self.chat_window.minsize(width=600, height=400)
+        self.chat_window.minsize(
+                                    width=600, 
+                                    height=400)
 
         self.setup_chat_box()
         self.setup_input_field()
@@ -52,7 +55,8 @@ class Main_GUI:
     
     def setup_chat_box(self):
         self.chat_box = tk.Text(self.chat_window,
-                                font=(self.font_name, 12 * self.font_size))
+                                font=(self.font_name, 12 * self.font_size), 
+                                state=tk.DISABLED)
         self.chat_box.grid()
         
     
@@ -76,13 +80,20 @@ class Main_GUI:
     
     # Utility Functions Taken from GUI.py for easier integration
     def send_msg(self, msg):
+        
+        # store into my_msg property for data handling
         self.my_msg = msg
+
+        # clear the input field
         self.input_field.delete(0, tk.END)
+
+        # Add the message to the chat box
         self.chat_box.config(state=tk.NORMAL)
         self.chat_box.insert(tk.END, msg + "\n")
         self.chat_box.config(state=tk.DISABLED)
         self.chat_box.see(tk.END)
 
+    # Daemon task for receiving messages and adding them to the screen
     def background_process(self):
         while True:
             read, write, error = select.select([self.socket], [], [], 0)
@@ -92,10 +103,10 @@ class Main_GUI:
             if len(self.my_msg) > 0 or len(peer_msg) > 0:
                 self.system_msg = self.sm.proc(self.my_msg, peer_msg)
                 self.my_msg = ""
-                self.textCons.config(state=NORMAL)
-                self.textCons.insert(END, self.system_msg + "\n\n")
-                self.textCons.config(state=DISABLED)
-                self.textCons.see(END)
+                self.chat_box.config(state=tk.NORMAL)
+                self.chat_box.insert(tk.END, self.system_msg + "\n\n")
+                self.chat_box.config(state=tk.DISABLED)
+                self.chat_box.see(tk.END)
             
     def run(self):
         self.root.mainloop()
@@ -103,5 +114,3 @@ class Main_GUI:
 if __name__ == "__main__":
     gui = Main_GUI(None, None, None, None)
     gui.run()
-        
-

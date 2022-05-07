@@ -6,6 +6,10 @@ import threading
 import tkinter as tk
 import chat_utils as cu
 
+class Spacer(tk.Label):
+    def __init__(self, master):
+        tk.Label.__init__(self, master, text="")
+
 class Main_GUI:
 
     ### Class Initialization ###
@@ -32,6 +36,11 @@ class Main_GUI:
         self.socket = s
         self.my_msg = ""
         self.system_msg = ""
+        
+        # GUI functions
+        self.send_input = lambda *args: self.send_msg(self.input_field.get())
+        self.input_field.bind("<Return>", self.send_input)
+        self.send_btn.bind("<Return>", self.send_input)
 
     ### UI Elements Setup Methods ###
 
@@ -40,8 +49,8 @@ class Main_GUI:
         self.chat_window = tk.Toplevel(self.root)
         self.chat_window.title("PyChat")
         self.chat_window.resizable(
-                                    width=True,
-                                    height=True)
+                                    width=False,
+                                    height=False)
         self.chat_window.configure(
                                     width=800, 
                                     height=800)
@@ -50,26 +59,32 @@ class Main_GUI:
                                     height=400)
 
         self.setup_chat_box()
-        self.setup_input_field()
-        self.setup_send_button()
+        self.setup_input_bar()
     
     def setup_chat_box(self):
         self.chat_box = tk.Text(self.chat_window,
                                 font=(self.font_name, 12 * self.font_size), 
                                 state=tk.DISABLED)
-        self.chat_box.grid()
+        self.chat_box.grid(row=0, columnspan=3, sticky=tk.NSEW)
         
-    
+    def setup_input_bar(self):
+        self.setup_input_field()
+        self.setup_input_spacer()
+        self.setup_send_button()
+
     def setup_input_field(self):
         self.input_field = tk.Entry(self.chat_window)
-        self.input_field.insert(0, "Input Field Placeholder")
-        self.input_field.grid()
+        self.input_field.grid(row=1, column=0, sticky=tk.NSEW)
     
+    def setup_input_spacer(self):
+        self.input_spacer = Spacer(self.chat_window) 
+        self.input_spacer.grid(row=1, column=1, sticky=tk.NSEW)
+
     def setup_send_button(self):
         self.send_btn = tk.Button(self.chat_window,
-                                  text="Send Button Placeholder", 
-                                  command=lambda: self.send_msg(self.input_field.get()))
-        self.send_btn.grid()
+                                  text="Send", 
+                                  command=lambda: self.send_input())
+        self.send_btn.grid(row=1, column=3, sticky=tk.NSEW)
     
         
     ### Action Methods ###

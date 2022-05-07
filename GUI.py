@@ -224,7 +224,7 @@ class GUI:
     def run(self):
         self.login()
 
-# IF YOU MAKE A FILE RUNABLE ATLEAST MAKE THE TEST VALID
+# IF YOU MAKE A FILE RUNABLE ATLEAST MAKE THE TEST VALID!!!
 # create a GUI class object
 if __name__ == "__main__":
     #g = GUI(None, None, None, None)

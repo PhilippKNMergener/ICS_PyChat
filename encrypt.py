@@ -1,9 +1,13 @@
+"""
+Author: Rao
+File: Encrypt.py
+"""
+
 import string
 import random
 
 
-
-
+# Class for encrypting and decrypting messages
 class Encrypt():
     # Initializers
     def __init__(self):

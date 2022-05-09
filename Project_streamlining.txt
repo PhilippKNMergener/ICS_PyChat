@@ -1,11 +1,17 @@
 Code Style:
 
-import:
+PLEASE COMMENT YOUR CODE
+MORE IS BETTER THAN LESS
+<3
+
+“Programs are meant to be read by humans and only incidentally for computers to execute.”
+― Donald Knuth 
+
+imports:
     PLEASE DO NOT USE "from ___ import *" JUST SAY "import ____"
     I know that the proffessor did but this is not best practice and is frowned upon
     it makes it unclear when you are using functionality from a module
     it helps to know when a class or variable is coming from somewhere else and where it's from
-
 
 variable and function names: 
     underscore separated lowercase

@@ -1,6 +1,6 @@
 
 
-class tic_tac_toe():
+class Tic_Tac_Toe():
 
     class resources():
         def __init__(self):
@@ -107,5 +107,5 @@ _ml_|_mm_|_mr_
 
 
 if __name__ == "__main__":
-    game = tic_tac_toe() 
+    game = Tic_Tac_Toe() 
     game.play()

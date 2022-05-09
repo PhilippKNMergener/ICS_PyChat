@@ -3,6 +3,7 @@ import sys
 from chat_utils import *
 import client_state_machine as csm
 from GUI import *
+import Main_GUI as gui
 
 
 class Client:
@@ -18,7 +19,13 @@ class Client:
         svr = SERVER if self.args.d == None else (self.args.d, CHAT_PORT)
         self.socket.connect(svr)
         self.sm = csm.ClientSM(self.socket)
-        self.gui = GUI(self.send, self.recv, self.sm, self.socket)
+
+        # Create a new GUI instance from Main_GUI
+        self.gui = gui.Main_GUI(self.send, self.recv, self.sm, self.socket)
+        
+        # This used the example GUI instead of our own
+        # Keep for testing / comparison 
+        # self.gui = GUI(self.send, self.recv, self.sm, self.socket)
 
     def shutdown_chat(self):
         return

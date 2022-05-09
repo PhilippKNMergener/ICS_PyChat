@@ -1,5 +1,5 @@
 """
-Author: Rao
+Author: Rao Daud Ali Khan
 File: Encrypt.py
 """
 
@@ -13,19 +13,21 @@ class Encrypt():
     def __init__(self):
         pass
 
+    # TODO: write decryption method for each encryption method
+    
     # Encryption functions
     def shift_right(d):
         new_word = d[-1] + d[0:len(d)-1]
         return new_word
 
-    #function #3
-
+    # function #3
+    # shift all letters to the left
     def shift_left(e):
         newword = e[1:len(e)] + e[0]
         return newword
 
-    #function #4
-
+    # function #4
+    # flip the right and left half of the input string
     def flip(f):
         if len(f) % 2 == 0:
             newword = f[int(len(f)/2):] + f[0:int(len(f)/2)]
@@ -33,15 +35,18 @@ class Encrypt():
             newword = f[(len(f)//2)+1:] + f[len(f)//2] + f[0:(len(f)//2)]
         return newword
 
-    #function #5
-
+    # function #5
+    # Add one random letter between each letter of the input
+    # Starting after the first letter (this will be important for decoding)
     def add_letters(a,b):
         newword = ''
         for i in a:
             newword += i
             for _ in range(b):
                 newword += random.choice(string.ascii_letters)
-        return newword.upper()
+        # By making this swapcase it will be posible to encode and decode capital and lowercase letters
+        # the decode function will just swap the case back
+        return newword.swapcase()
 
     # generate a random key with param length
     def random_key(length = 3):
@@ -53,82 +58,84 @@ class Encrypt():
         return key
 
     # Main class methods
-    # TODO: encrypt message and return encrypted (message, key)
+    
     def encrypt_message(self, message):
+        # TODO: encrypt message and return encrypted (message, key)
         encrypted = ""
         key = ""
         return (encrypted, key)
 
     def decrypt_message(self, encrypted, key):
-
+        # TODO: decrypt message and return the original string
         pass
 
     
 
     
 
-"""
-def ascii_shift(a,b):
-    value = ''
-    for c in a:
-        if c.isupper():
-            if b >= 26:
-                b = b%26
-            elif b <= -26:
-                b = b % -26
-            letter = c
-            value += chr(ord(letter) + b)
-        else:
-            value += c        
-    return value
-"""
+# Commented so that they wont cause extra imports when this file is used as a module in the other files
 
-#function #2
+#
+#def ascii_shift(a,b):
+#    value = ''
+#    for c in a:
+#        if c.isupper():
+#            if b >= 26:
+#                b = b%26
+#            elif b <= -26:
+#                b = b % -26
+#            letter = c
+#            value += chr(ord(letter) + b)
+#        else:
+#            value += c        
+#    return value
+#
+##function #2
+#
+#def shift_right(d):
+#    new_word = d[-1] + d[0:len(d)-1]
+#    return new_word
+#
+#
+#
+##function #3
+#
+#def shift_left(e):
+#    newword = e[1:len(e)] + e[0]
+#    return newword
+#
+#
+#
+##function #4
+#
+#def flip(f):
+#    if len(f) % 2 == 0:
+#        newword = f[int(len(f)/2):] + f[0:int(len(f)/2)]
+#    else:
+#        newword = f[(len(f)//2)+1:] + f[len(f)//2] + f[0:(len(f)//2)]
+#    return newword
+#
+#
+#
+##function #5
+#
+#def add_letters(a,b):
+#    newword = ''
+#    for i in a:
+#        newword += i
+#        for _ in range(b):
+#            newword += random.choice(string.ascii_letters)
+#    return newword.upper()
+#
+#
+#
+##function #6
+#
+#def delete_characters(a,b):
+#    newword = a[0::b+1]
+#    return newword
 
-def shift_right(d):
-    new_word = d[-1] + d[0:len(d)-1]
-    return new_word
-
-
-
-#function #3
-
-def shift_left(e):
-    newword = e[1:len(e)] + e[0]
-    return newword
-
-
-
-#function #4
-
-def flip(f):
-    if len(f) % 2 == 0:
-        newword = f[int(len(f)/2):] + f[0:int(len(f)/2)]
-    else:
-        newword = f[(len(f)//2)+1:] + f[len(f)//2] + f[0:(len(f)//2)]
-    return newword
-
-
-
-#function #5
-
-def add_letters(a,b):
-    newword = ''
-    for i in a:
-        newword += i
-        for _ in range(b):
-            newword += random.choice(string.ascii_letters)
-    return newword.upper()
-
-
-
-#function #6
-
-def delete_characters(a,b):
-    newword = a[0::b+1]
-    return newword
-
-
+# Test cases
 if __name__ == "__main__":
     while True:
         

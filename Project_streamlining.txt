@@ -1,0 +1,14 @@
+Code Style:
+
+import:
+    PLEASE DO NOT USE "from ___ import *" JUST SAY "import ____"
+    I know that the proffessor did but this is not best practice and is frowned upon
+    it makes it unclear when you are using functionality from a module
+    it helps to know when a class or variable is coming from somewhere else and where it's from
+
+
+variable and function names: 
+    underscore separated lowercase
+
+class names:
+    first capitalized

@@ -43,9 +43,12 @@ class Main_GUI:
         self.send_btn.bind("<Return>", self.send_input)
 
     ### UI Elements Setup Methods ###
+    # TODO: Design cleaner layout 
+    # TODO: Scrolling implementation
+    # TODO: Sidebar of group
 
+    # New window for the group chat
     def setup_chat_window(self):
-        # New window for the group chat
         self.chat_window = tk.Toplevel(self.root)
         self.chat_window.title("PyChat")
         self.chat_window.resizable(
@@ -61,26 +64,33 @@ class Main_GUI:
         self.setup_chat_box()
         self.setup_input_bar()
     
+    # Widget for displaying chat text
     def setup_chat_box(self):
         self.chat_box = tk.Text(self.chat_window,
                                 font=(self.font_name, 12 * self.font_size), 
                                 state=tk.DISABLED)
         self.chat_box.grid(row=0, columnspan=3, sticky=tk.NSEW)
         
+    # Widget for user chat input
     def setup_input_bar(self):
         self.setup_input_field()
         self.setup_input_spacer()
         self.setup_send_button()
 
+    # Widget for user input field
     def setup_input_field(self):
         self.input_field = tk.Entry(self.chat_window)
         self.input_field.grid(row=1, column=0, sticky=tk.NSEW)
     
+    # Widget to space input field and send button
+    # Not for use
     def setup_input_spacer(self):
         self.input_spacer = Spacer(self.chat_window) 
         self.input_spacer.grid(row=1, column=1, sticky=tk.NSEW)
 
+    # Widget for send button
     def setup_send_button(self):
+        # Calls send function when enter is pressed
         self.send_btn = tk.Button(self.chat_window,
                                   text="Send", 
                                   command=lambda: self.send_input())
@@ -88,7 +98,10 @@ class Main_GUI:
     
         
     ### Action Methods ###
+    # TODO: integrate send and receive methods for client class
+    # TODO: play tic tac toe method
 
+    # Updates and shows chat window
     def present_chat_window(self):
         self.chat_window.update()
         self.chat_window.deiconify()
@@ -123,9 +136,11 @@ class Main_GUI:
                 self.chat_box.config(state=tk.DISABLED)
                 self.chat_box.see(tk.END)
             
+    # Call this to start GUI
     def run(self):
         self.root.mainloop()
 
+# Testint case (no send or receive functionalities)
 if __name__ == "__main__":
     gui = Main_GUI(None, None, None, None)
     gui.run()

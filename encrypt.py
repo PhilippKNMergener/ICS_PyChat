@@ -19,12 +19,22 @@ class Encrypt():
     def shift_right(d):
         new_word = d[-1] + d[0:len(d)-1]
         return new_word
+    
+    def decrypt_shift_right(x):
+        oldword = x[1:len(x)] + x[0]
+        return oldword
+        
 
     # function #3
     # shift all letters to the left
     def shift_left(e):
         newword = e[1:len(e)] + e[0]
         return newword
+
+    def decrypt_shift_left(x):
+        oldword = x[-1] + x[0:len(x)-1]
+        return oldword
+
 
     # function #4
     # flip the right and left half of the input string
@@ -35,10 +45,17 @@ class Encrypt():
             newword = f[(len(f)//2)+1:] + f[len(f)//2] + f[0:(len(f)//2)]
         return newword
 
+    def decrypt_flip(x):
+        if len(x) % 2 == 0:
+            oldword = x[int(len(x)/2):] + x[0:int(len(x)/2)]
+        else:
+            oldword = x[(len(x)//2)+1:] + x[len(x)//2] + x[0:(len(x)//2)]
+        return oldword
+
     # function #5
     # Add one random letter between each letter of the input
     # Starting after the first letter (this will be important for decoding)
-    def add_letters(a,b):
+    def add_letters(self,a,b):
         newword = ''
         for i in a:
             newword += i
@@ -48,9 +65,16 @@ class Encrypt():
         # the decode function will just swap the case back
         return newword.swapcase()
 
+    def decrypt_add_letters(x):
+        oldword = ''
+        for i in x:
+            if i.islower():
+                oldword += i
+        return oldword
+
     # generate a random key with param length
     def random_key(length = 3):
-        letters = ["A", "P", "G", "J", "F"]
+        letters = ["A", "F", "R", "L"]
         key = ""
         key_length = length
         for i in range(key_length):
@@ -62,7 +86,28 @@ class Encrypt():
     def encrypt_message(self, message):
         # TODO: encrypt message and return encrypted (message, key)
         encrypted = ""
-        key = ""
+        key = random_key()
+
+        word = input("Enter a word to encode/decode: ").upper()
+
+        for i in key:
+            
+            if i == ("A"):
+                print("* Added 1 letter:", self.add_letters(word,1))
+                word = add_letters(word,1)
+            elif i == ("F"):
+                print("* Flipped:", flip(word))
+                word = flip(word)
+            elif i == ("R"):
+                print("* Shifted right:", shift_right(word))
+                word = shift_right(word)
+            elif i == ("L"):
+                print("* Shifted left:", shift_left(word))
+                word = shift_left(word)
+            else:
+                print("* "+i+" is an invalid command, ignoring")
+
+        encrypted += word
         return (encrypted, key)
 
     def decrypt_message(self, encrypted, key):

@@ -1,10 +1,11 @@
 # import all the required  modules
 import json
 import select
+import socket
 import threading
 
-import tkinter as tk
 import chat_utils as cu
+import tkinter as tk
 
 class Spacer(tk.Label):
     def __init__(self, master):
@@ -16,6 +17,13 @@ class Main_GUI:
 
     # Adapted version from GUI.py
     def __init__(self, send, recv, sm, s):
+        # necessary messaging properties
+        self.send = send
+        self.recv = recv
+        self.state_machine = sm
+        self.socket = s
+        self.my_msg = ""
+        self.system_msg = ""
 
         # GUI variables
         self.input_message: str = ""
@@ -28,14 +36,6 @@ class Main_GUI:
         
         # setup chat window views
         self.setup_chat_window()
-        
-        # necessary messaging properties
-        self.send = send
-        self.recv = recv
-        self.sm = sm
-        self.socket = s
-        self.my_msg = ""
-        self.system_msg = ""
         
         # GUI functions
         self.send_input = lambda *args: self.send_msg(self.input_field.get())
@@ -93,13 +93,32 @@ class Main_GUI:
         # Calls send function when enter is pressed
         self.send_btn = tk.Button(self.chat_window,
                                   text="Send", 
-                                  command=lambda: self.send_input())
+                                  command=lambda: self.login("test"))#self.send_input())
         self.send_btn.grid(row=1, column=3, sticky=tk.NSEW)
     
         
     ### Action Methods ###
     # TODO: integrate send and receive methods for client class
     # TODO: play tic tac toe method
+
+    def login(self, name):
+        msg = json.dumps({"action":"login","name":name})
+        self.my_msg = msg
+        response = json.loads(self.recv())
+        if response["status"] == "ok":
+            self.state_machine.set_state(cu.S_LOGGEDIN)
+            self.state_machine.set_myname(name)
+            self.chat_box.config(state=NORMAL)
+            self.chat_box.insert(END, menu + "\n\n")
+            self.chat_box.config(state=DISABLED)
+            self.chat_box.see(END)
+
+        # the thread to receive messages
+        process = threading.Thread(target=self.background_process)
+        process.daemon = True
+        process.start()
+            
+
 
     # Updates and shows chat window
     def present_chat_window(self):
@@ -129,7 +148,7 @@ class Main_GUI:
             if self.socket in read:
                 peer_msg = self.recv()
             if len(self.my_msg) > 0 or len(peer_msg) > 0:
-                self.system_msg = self.sm.proc(self.my_msg, peer_msg)
+                self.system_msg = self.state_machine.proc(self.my_msg, peer_msg)
                 self.my_msg = ""
                 self.chat_box.config(state=tk.NORMAL)
                 self.chat_box.insert(tk.END, self.system_msg + "\n\n")

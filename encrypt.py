@@ -14,6 +14,7 @@ class Encrypt():
         pass
 
     # TODO: write decryption method for each encryption method
+    # Done and checked
     
     # Encryption functions
     def shift_right(d):
@@ -81,7 +82,14 @@ class Encrypt():
             key += random.choice(letters)
         return key
 
+
     # Main class methods
+
+    #for philipp: i have been trying to find a way to use the encryption functions inside this encrypt_message() function
+    #but somehow thats not the pyhton syntax. What I wanna do is use the return values from encryption functions above in this
+    # function so I can generate an encrypted message and same for the key to which I wanna assign the returned value of
+    # the random_key() function. My guess is there is something I need to add to the initializing function.
+    #  Any suggestions or hints how to tackle this? 
     
     def encrypt_message(self, message):
         # TODO: encrypt message and return encrypted (message, key)
@@ -181,6 +189,8 @@ class Encrypt():
 #    return newword
 
 # Test cases
+
+"""
 if __name__ == "__main__":
     while True:
         
@@ -219,3 +229,4 @@ if __name__ == "__main__":
                 
         print("Final encoding / decoding:",word)
         print()
+"""

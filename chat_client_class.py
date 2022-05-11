@@ -25,7 +25,7 @@ class Client:
         
         # This used the example GUI instead of our own
         # Keep for testing / comparison 
-        # self.gui = GUI(self.send, self.recv, self.sm, self.socket)
+        #self.gui = GUI(self.send, self.recv, self.sm, self.socket)
 
     def shutdown_chat(self):
         return

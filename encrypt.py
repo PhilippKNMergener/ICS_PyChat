@@ -56,7 +56,7 @@ class Encrypt():
     # function #5
     # Add one random letter between each letter of the input
     # Starting after the first letter (this will be important for decoding)
-    def add_letters(self,a,b):
+    def add_letters(self, a,b):
         newword = ''
         for i in a:
             newword += i
@@ -90,8 +90,18 @@ class Encrypt():
     # function so I can generate an encrypted message and same for the key to which I wanna assign the returned value of
     # the random_key() function. My guess is there is something I need to add to the initializing function.
     #  Any suggestions or hints how to tackle this? 
-    
-    def encrypt_message(self, message):
+
+    # RAO: there are a few ways to achive this 
+    # First of all if you're already getting a "message" as a parameter for the function you don't need to ask the user for input for a message to encrypt just use the value passed in through the parameter
+    # second when you say "random_key" or any method within the encrypt class you need to tell the interpreter that it is a method of that class
+    # try using Encrypt.random_key() instead
+    # 
+    # Second of all (This is a little higher level but bear with me)
+    # This class is only used to contain the methods for encrypting and decrypting, this means that you dont actually care about the object itself
+    # Because of this you can remove the self parameter from the methods meaning that when you want to call method in this class you will use the same format    
+    # ex: method called: "encrypt_message" call: Encrypt.encrypt_message(message)
+
+    def encrypt_message(message):
         # TODO: encrypt message and return encrypted (message, key)
         encrypted = ""
         key = random_key()
@@ -189,6 +199,10 @@ class Encrypt():
 #    return newword
 
 # Test cases
+
+if __name__ == "__main__":
+    
+    print(Encrypt.encrypt_message("hello, world"))
 
 """
 if __name__ == "__main__":

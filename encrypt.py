@@ -72,7 +72,8 @@ class Encrypt():
         oldword = ''
         for i in x:
             if i.islower():
-                oldword += i
+                x.replace(i,"")
+        oldword = x
         return oldword
 
     # generate a random key with param length
@@ -130,20 +131,24 @@ class Encrypt():
         return (encrypted, key)
 
 
-    # philipp: for this decrypt function, the arguments seem to be a problem. While testing it with the output, it says you need to pass 
-    #arguments to the function when printing it whereas I have been trying to do the same thing as i did in the encrypt method
-    #but there is an argument being passed to it 'hello, world' so that's making a difference. I feel like the inside logic of the method
-    #is okay once I can figure this out. I will look more into this after I woke up but please suggest something too if you get the
-    #time to see this. If you could give me a test case to check this like the previous one that would be of great help.
+    # philipp: the decryption function is working now. Had to mess with the test code a bit to check it. Please let me know if there's
+    # a problem with that. Secondly, the decryption logic is being a lil-b. The decrypt add letters function is not doing
+    #what I want to do. Messed with it a hundred times but still the same response. It;s not deleting the added characters.
+    # Please take a look if u have time and let me know if u see somethn sus in there. I will look at it again after waking up,
+    #might be able to crack it w a fresh mind. Also, please run this and point out any other errors too u find it and I will correct
+    #them asap so I can move on to fitting this into the chat system. Thank you!!
 
-    def decrypt_message(encypted, key):
+    def decrypt_message(encrypted, key):
         # TODO: decrypt message and return the original string
 
-        encrypted, key = Encrypt.encrypt_message()
+       # encrypted, key = Encrypt.encrypt_message()
+
+        decrypted = encrypted
 
         if "A" in key:
-            decrypted = Encrypt.decrypt_add_letters(encrypted)
-            key.replace("A","")
+            while "A" in key == False:
+                decrypted = Encrypt.decrypt_add_letters(encrypted)
+                key.replace("A","")
             for i in key:
                 if i == "F":
                     decrypted = Encrypt.decrypt_flip(encrypted)
@@ -229,8 +234,13 @@ class Encrypt():
 # Test cases
 
 if __name__ == "__main__":
-    print(Encrypt.encrypt_message("hello, world"))
-    print(Encrypt.decrypt_message())
+    print("\n\n\n")
+    encrypted_msg, key2 = Encrypt.encrypt_message("hello, world")
+    print("\n\n\n")
+    print(encrypted_msg, key2)
+    print("\n\n\n")
+    print(Encrypt.decrypt_message(encrypted_msg,key2))
+    print("\n\n\n")
 
 """
 if __name__ == "__main__":

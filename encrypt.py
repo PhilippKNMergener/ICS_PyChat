@@ -58,7 +58,7 @@ class Encrypt():
     # function #5
     # Add one random letter between each letter of the input
     # Starting after the first letter (this will be important for decoding)
-    def add_letters(self, a,b):
+    def add_letters(a, b):
         newword = ''
         for i in a:
             newword += i
@@ -105,41 +105,65 @@ class Encrypt():
     # 
     # I added a test case at the bottom of the file which should work once those changes are made
 
+    #for philipp: error solved and checked through your test code. Thanks to you!
+
     def encrypt_message(message):
         # TODO: encrypt message and return encrypted (message, key)
-        encrypted = ""
-        key = random_key()
-
-        word = input("Enter a word to encode/decode: ").upper()
+        encrypted = message
+        key = Encrypt.random_key()
 
         for i in key:
             
             if i == ("A"):
-                print("* Added 1 letter:", self.add_letters(word,1))
-                word = add_letters(word,1)
+                print("* Added 1 letter:", Encrypt.add_letters(encrypted,1))
+                encrypted = Encrypt.add_letters(encrypted,1)
             elif i == ("F"):
-                print("* Flipped:", flip(word))
-                word = flip(word)
+                print("* Flipped:", Encrypt.flip(encrypted))
+                encrypted = Encrypt.flip(encrypted)
             elif i == ("R"):
-                print("* Shifted right:", shift_right(word))
-                word = shift_right(word)
+                print("* Shifted right:", Encrypt.shift_right(encrypted))
+                encrypted = Encrypt.shift_right(encrypted)
             elif i == ("L"):
-                print("* Shifted left:", shift_left(word))
-                word = shift_left(word)
-            else:
-                print("* "+i+" is an invalid command, ignoring")
+                print("* Shifted left:", Encrypt.shift_left(encrypted))
+                encrypted = Encrypt.shift_left(encrypted)
 
-        encrypted += word
         return (encrypted, key)
 
-    def decrypt_message(self, encrypted, key):
+
+    # philipp: for this decrypt function, the arguments seem to be a problem. While testing it with the output, it says you need to pass 
+    #arguments to the function when printing it whereas I have been trying to do the same thing as i did in the encrypt method
+    #but there is an argument being passed to it 'hello, world' so that's making a difference. I feel like the inside logic of the method
+    #is okay once I can figure this out. I will look more into this after I woke up but please suggest something too if you get the
+    #time to see this. If you could give me a test case to check this like the previous one that would be of great help.
+
+    def decrypt_message(encypted, key):
         # TODO: decrypt message and return the original string
-        pass
 
+        encrypted, key = Encrypt.encrypt_message()
+
+        if "A" in key:
+            decrypted = Encrypt.decrypt_add_letters(encrypted)
+            key.replace("A","")
+            for i in key:
+                if i == "F":
+                    decrypted = Encrypt.decrypt_flip(encrypted)
+                elif i == "L":
+                    decrypted = Encrypt.decrypt_shift_left(encrypted)
+                elif i == "R":
+                    decrypted = Encrypt.decrypt_shift_right(encrypted)
+
+        else:
+            for i in key:
+                if i == "F":
+                    decrypted = Encrypt.decrypt_flip(encrypted)
+                elif i == "L":
+                    decrypted = Encrypt.decrypt_shift_left(encrypted)
+                elif i == "R":
+                    decrypted = Encrypt.decrypt_shift_right(encrypted)
+
+
+        return (decrypted)
     
-
-    
-
 # Commented so that they wont cause extra imports when this file is used as a module in the other files
 
 #
@@ -206,6 +230,7 @@ class Encrypt():
 
 if __name__ == "__main__":
     print(Encrypt.encrypt_message("hello, world"))
+    print(Encrypt.decrypt_message())
 
 """
 if __name__ == "__main__":

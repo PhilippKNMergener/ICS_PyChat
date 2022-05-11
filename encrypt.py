@@ -145,6 +145,8 @@ class Encrypt():
 
         decrypted = encrypted
 
+        # This should not be necessary
+        # Taking the letters out should happen in order as well as this may affect the other decryption methods
         if "A" in key:
             while "A" in key == False:
                 decrypted = Encrypt.decrypt_add_letters(encrypted)
@@ -158,6 +160,9 @@ class Encrypt():
                     decrypted = Encrypt.decrypt_shift_right(encrypted)
 
         else:
+            # 1. to decrypt the key needs to be read backwards
+            # 2. When you call the decryption methods you are giving them "encrypted" not "decrypted" which is the one you are modifying
+            #
             for i in key:
                 if i == "F":
                     decrypted = Encrypt.decrypt_flip(encrypted)

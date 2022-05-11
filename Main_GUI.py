@@ -1,12 +1,19 @@
+"""
+Author: Philipp Mergener
+file: Main_GUI.py
+"""
 # import all the required  modules
 import json
 import select
 import socket
 import threading
+import random
 
 import chat_utils as cu
 import tkinter as tk
 
+from encrypt import Encrypt
+from emojis import Emoji
 class Spacer(tk.Label):
     def __init__(self, master):
         tk.Label.__init__(self, master, text="")
@@ -41,6 +48,9 @@ class Main_GUI:
     # TODO: Scrolling implementation
     # TODO: Sidebar of group
 
+    def launch_login_window():
+        login_window = tk.Toplevel()
+        pass
     # New window for the group chat
     def setup_chat_window(self):
         self.chat_window = tk.Toplevel(self.root)
@@ -105,10 +115,10 @@ class Main_GUI:
         if response["status"] == "ok":
             self.state_machine.set_state(cu.S_LOGGEDIN)
             self.state_machine.set_myname(name)
-            self.chat_box.config(state=NORMAL)
-            self.chat_box.insert(END, menu + "\n\n")
-            self.chat_box.config(state=DISABLED)
-            self.chat_box.see(END)
+            self.chat_box.config(state=tk.NORMAL)
+            self.chat_box.insert(tk.END, cu.menu + "\n\n")
+            self.chat_box.config(state=tk.DISABLED)
+            self.chat_box.see(tk.END)
 
         # the thread to receive messages
         process = threading.Thread(target=self.background_process)
@@ -118,13 +128,19 @@ class Main_GUI:
 
     # Utility Functions Taken from GUI.py for easier integration
     def send_msg(self):
-        
-        # store into my_msg property for data handling
-        self.my_msg = self.input_field.get().strip()
 
-        # clear the input field
         self.input_field.delete(0, tk.END)
 
+        # store into my_msg property for data handling
+        plain_text = self.input_field.get().strip()
+        if plain_text:
+            encoded = Encrypt.encrypt_message(plain_text)            
+        else:
+            return
+        self.my_msg = encoded
+
+        # clear the input field
+        
         if self.my_msg:
             # Add the message to the chat box
             self.chat_box.config(state=tk.NORMAL)
@@ -149,7 +165,7 @@ class Main_GUI:
             
     # Call this to start GUI
     def run(self):
-        name = "test1"
+        name = "test" + chr(random.randint(0, 10))
         msg = json.dumps({"action": "login","name": name})
         self.send(msg)
         print("waiting for server")

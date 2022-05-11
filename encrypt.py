@@ -10,8 +10,10 @@ import random
 # Class for encrypting and decrypting messages
 class Encrypt():
     # Initializers
+    # you dont actually need an initializer because every instance of the class will be the same
     def __init__(self):
         pass
+
 
     # TODO: write decryption method for each encryption method
     # Done and checked
@@ -100,6 +102,8 @@ class Encrypt():
     # This class is only used to contain the methods for encrypting and decrypting, this means that you dont actually care about the object itself
     # Because of this you can remove the self parameter from the methods meaning that when you want to call method in this class you will use the same format    
     # ex: method called: "encrypt_message" call: Encrypt.encrypt_message(message)
+    # 
+    # I added a test case at the bottom of the file which should work once those changes are made
 
     def encrypt_message(message):
         # TODO: encrypt message and return encrypted (message, key)
@@ -201,7 +205,6 @@ class Encrypt():
 # Test cases
 
 if __name__ == "__main__":
-    
     print(Encrypt.encrypt_message("hello, world"))
 
 """

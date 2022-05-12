@@ -108,6 +108,10 @@ class Encrypt():
 
     #for philipp: error solved and checked through your test code. Thanks to you!
 
+    #philipp: im having trouble with looping the key backwards. I've tries some help from google too but shit ain't workin. Secondly,
+    #the decrypt add letter function is constantly being a mess. It is not deleting the characters added. I have tried numerous
+    #ways but same result. Please have a look and lemme know if something seems shady to you.
+
     def encrypt_message(message):
         # TODO: encrypt message and return encrypted (message, key)
         encrypted = message

@@ -50,8 +50,19 @@ class Main_GUI:
     # TODO: Sidebar of group
 
     def launch_login_window():
-        login_window = tk.Toplevel()
-        pass
+        self.login_window = tk.Toplevel()
+        self.login_window.title("PyChat - Login")
+        self.login_window.resizable(width=False,
+                               height=False)
+        self.login_window.configure(width=800, 
+                                    height=500)
+        self.login_title = tk.Label(text="Welcome to PyChat \n \
+                                        please enter your username")
+        self.user_name_input = tk.Entry()
+        self.login_btn = tk.Button(text="Login", 
+                                   command = self.login(self.user_name_input.get()))
+        
+         
     # New window for the group chat
     def setup_chat_window(self):
         self.chat_window = tk.Toplevel(self.root)
@@ -62,9 +73,6 @@ class Main_GUI:
         self.chat_window.configure(
                                     width=800, 
                                     height=800)
-        self.chat_window.minsize(
-                                    width=600, 
-                                    height=400)
 
         self.setup_chat_box()
         self.setup_input_bar()
@@ -104,25 +112,8 @@ class Main_GUI:
         self.send_btn.grid(row=1, column=3, sticky=tk.NSEW)
         self.send_btn.bind("<Return>", lambda *args: self.send_msg())
     
-        
     ### Action Methods ###
     # TODO: integrate send and receive methods for client class
-    # TODO: play tic tac toe method
-
-    def login(self, name):
-        msg = json.dumps({"action": "login","name": name})
-        self.my_msg = msg
-        response = json.loads(self.recv())
-        if response["status"] == "ok":
-            self.state_machine.set_state(cu.S_LOGGEDIN)
-            self.state_machine.set_myname(name)
-            self.post_to_chat_box(cu.menu)
-
-        # the thread to receive messages
-        process = threading.Thread(target=self.background_process)
-        process.daemon = True
-        process.start()
-            
 
     # Utility Functions Taken from GUI.py for easier integration
     def send_msg(self):
@@ -185,9 +176,8 @@ class Main_GUI:
                 self.my_msg = ""
                 self.post_to_chat_box(self.system_msg)
             
-    # Call this to start GUI
-    def run(self):
-        name = f"test{random.randint(0, 10)}"
+
+    def login(self, name):
         msg = json.dumps({"action": "login","name": name})
         self.send(msg)
         response = json.loads(self.recv())
@@ -207,7 +197,13 @@ class Main_GUI:
         process.daemon = True
         process.start()
 
-        self.root.mainloop()        
+        self.root.mainloop()
+    
+    # Call this to start GUI
+    def run(self):
+        name = f"test{random.randint(0, 10)}"
+        self.login(name)
+                
 
 # Testint case (no send or receive functionalities)
 if __name__ == "__main__":

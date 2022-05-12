@@ -156,11 +156,12 @@ class Encrypt():
             # 1. to decrypt the key needs to be read backwards
             # 2. When you call the decryption methods you are giving them "encrypted" not "decrypted" which is the one you are modifying
             #
-        for i in key[-1::-1]:
+        
+        for i in list(reversed(key)): # this is just something that is worth memorizing for reversing iterable objects
             decrypted = oldword
 
             if i == "F":
-                oldword = Encrypt.decrypt_flip(encrypted)
+                oldword = Encrypt.decrypt_flip(encrypted) # You're still changing the input instead of the string you are decrypting this should be decrypted not encryted.
             if i == "L":
                 oldword = Encrypt.decrypt_shift_left(encrypted)
             if i == "R":

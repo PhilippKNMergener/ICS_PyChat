@@ -70,10 +70,10 @@ class Encrypt():
 
     def decrypt_add_letters(x):
         oldword = ''
-        for i in x:
-            if i.islower():
-                x.replace(i,"")
-        oldword = x
+        for i in x[0:]:
+            x.replace(i,"")
+
+        x = oldword
         return oldword
 
     # generate a random key with param length
@@ -147,29 +147,19 @@ class Encrypt():
 
         # This should not be necessary
         # Taking the letters out should happen in order as well as this may affect the other decryption methods
-        if "A" in key:
-            while "A" in key == False:
-                decrypted = Encrypt.decrypt_add_letters(encrypted)
-                key.replace("A","")
-            for i in key:
-                if i == "F":
-                    decrypted = Encrypt.decrypt_flip(encrypted)
-                elif i == "L":
-                    decrypted = Encrypt.decrypt_shift_left(encrypted)
-                elif i == "R":
-                    decrypted = Encrypt.decrypt_shift_right(encrypted)
-
-        else:
+        
             # 1. to decrypt the key needs to be read backwards
             # 2. When you call the decryption methods you are giving them "encrypted" not "decrypted" which is the one you are modifying
             #
-            for i in key:
-                if i == "F":
-                    decrypted = Encrypt.decrypt_flip(encrypted)
-                elif i == "L":
-                    decrypted = Encrypt.decrypt_shift_left(encrypted)
-                elif i == "R":
-                    decrypted = Encrypt.decrypt_shift_right(encrypted)
+        for i in key[-1:]:
+            if i == "F":
+                decrypted = Encrypt.decrypt_flip(encrypted)
+            elif i == "L":
+                decrypted = Encrypt.decrypt_shift_left(encrypted)
+            elif i == "R":
+                decrypted = Encrypt.decrypt_shift_right(encrypted)
+            elif i == "A":
+                decrypted = Encrypt.decrypt_add_letters(encrypted)
 
 
         return (decrypted)

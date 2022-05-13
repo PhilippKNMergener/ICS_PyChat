@@ -66,14 +66,15 @@ class Encrypt():
                 newword += random.choice(string.ascii_letters)
         # By making this swapcase it will be posible to encode and decode capital and lowercase letters
         # the decode function will just swap the case back
-        return newword.swapcase()
+        return newword
 
     def decrypt_add_letters(x):
         oldword = ''
-        for i in x[-1::2]:
-            oldword = x.replace(i,"")
-
-        
+        y = list(x)
+        for i in y[1::2]:
+                y.remove(i)
+        for o in y:
+            oldword += o
         return oldword
 
     # generate a random key with param length
@@ -148,7 +149,7 @@ class Encrypt():
        # encrypted, key = Encrypt.encrypt_message()
 
         #decrypted = encrypted
-        oldword = ''
+        decrypted = encrypted
 
         # This should not be necessary
         # Taking the letters out should happen in order as well as this may affect the other decryption methods
@@ -158,16 +159,15 @@ class Encrypt():
             #
         
         for i in list(reversed(key)): # this is just something that is worth memorizing for reversing iterable objects
-            decrypted = oldword
 
             if i == "F":
-                oldword = Encrypt.decrypt_flip(encrypted) # You're still changing the input instead of the string you are decrypting this should be decrypted not encryted.
+                decrypted = Encrypt.decrypt_flip(decrypted) # You're still changing the input instead of the string you are decrypting this should be decrypted not encryted.
             if i == "L":
-                oldword = Encrypt.decrypt_shift_left(encrypted)
+                decrypted = Encrypt.decrypt_shift_left(decrypted)
             if i == "R":
-                oldword = Encrypt.decrypt_shift_right(encrypted)
+                decrypted = Encrypt.decrypt_shift_right(decrypted)
             if i == "A":
-                oldword = Encrypt.decrypt_add_letters(encrypted)
+                decrypted = Encrypt.decrypt_add_letters(decrypted)
 
         
         return (decrypted)
@@ -242,7 +242,7 @@ if __name__ == "__main__":
     print("\n\n\n")
     print(encrypted_msg, key2)
     print("\n\n\n")
-    print(Encrypt.decrypt_message(encrypted_msg,key2))
+    print(Encrypt.decrypt_message(encrypted_msg, key2))
     print("\n\n\n")
 
 """

@@ -129,7 +129,7 @@ class Main_GUI:
                     if words[0] == "!help":
                         self.post_to_chat_box(cu.menu)
                     elif words[0] == "!emoji":
-                        emoji_menu = "Emoji Shortcuts: \n" + "\n ".join([f" {k}  -->  {v}" for k,v in self.e_build.shortcuts.items()]) + "\n"
+                        emoji_menu = "\nEmoji Shortcuts: \n" + "\n ".join([f" {k}  -->  {v}" for k,v in self.e_build.shortcuts.items()]) + "\n"
                         self.post_to_chat_box(emoji_menu)
                     else:
                         self.my_msg = plain_text[1:]

@@ -35,7 +35,7 @@ class Main_GUI:
         # GUI variables
         self.e_build = Emoji()
         self.input_message: str = ""
-        self.font_name = "Calibri"
+        self.font_name = "Comic Sans MS"
         self.font_size = 1
 
         # initiate the root tcl object for GUI
@@ -44,26 +44,42 @@ class Main_GUI:
 
     ### UI Elements Setup Methods ###
 
+    # Creates the login window for GUI Launch
+    # called from run()
     def launch_login_window(self):
-        self.login_window = tk.Toplevel()
+        self.login_window = tk.Toplevel(bd=15, bg="#86d19a")
         self.login_window.title("PyChat - Login")
         self.login_window.resizable(width=False,
                                     height=False)
         self.login_window.configure(width=800, 
                                     height=500)
-        self.login_title = tk.Label(self.login_window, text=" Welcome to PyChat ".center(80, "~") +"\n \
-                                        please enter your username")
-        self.login_title.grid(row=0)
-        self.user_name_input = tk.Entry(self.login_window)
-        self.user_name_input.grid(row=2)
-        self.login_btn = tk.Button(self.login_window, text="Login", 
+        self.login_title = tk.Label(self.login_window, text=" Welcome to PyChat ".center(80, "~"),
+                                    font=(self.font_name, 15 * self.font_size),
+                                    bg="#86d19a",
+                                    bd=10)
+        self.message_label = tk.Label(self.login_window, text="please enter your username to continue",
+                                      font=(self.font_name, 13 * self.font_size),
+                                      bg="#86d19a",
+                                      bd=10)
+        self.login_title.grid(row=1)
+        self.message_label.grid(row=2)
+        self.user_name_input = tk.Entry(self.login_window, 
+                                        font=(self.font_name, 12 * self.font_size), 
+                                        bg="#86d19a",
+                                        bd=4)
+        self.user_name_input.grid(row=3)
+        self.login_btn = tk.Button(self.login_window, text="Login",
+                                   font=(self.font_name, 12 * self.font_size), 
+                                   bg="#86d19a",
+                                   bd=4,
                                    command = lambda: self.login(self.user_name_input.get()))
-        self.login_btn.grid(row=3)
+        self.login_btn.grid(row=4)
         self.root.mainloop()
          
     # New window for the group chat
     def setup_chat_window(self):
-        self.chat_window = tk.Toplevel(self.root)
+        self.chat_window = tk.Toplevel(self.root, bd=10,
+                                       bg="#86d19a")
         self.chat_window.title("PyChat")
         self.chat_window.resizable(
                                     width=False,
@@ -80,6 +96,7 @@ class Main_GUI:
     def setup_chat_box(self):
         self.chat_box = tk.Text(self.chat_window,
                                 font=(self.font_name, 12 * self.font_size), 
+                                bg="#86d19a",
                                 state=tk.DISABLED)
         self.chat_box.grid(row=0, columnspan=3, sticky=tk.NSEW)
         
@@ -90,20 +107,19 @@ class Main_GUI:
 
     # Widget for user input field
     def setup_input_field(self):
-        self.input_field = tk.Entry(self.chat_window)
+        self.input_field = tk.Entry(self.chat_window, 
+                                    font=(self.font_name, 12 * self.font_size),
+                                    bg="#86d19a")
         self.input_field.grid(row=1, columnspan=2, sticky=tk.NSEW)
         self.input_field.bind("<Return>", lambda *args: self.send_msg())
-    
-    # Widget to space input field and send button
-    #def setup_input_spacer(self):
-    #    self.input_spacer = Spacer(self.chat_window) 
-    #    self.input_spacer.grid(row=1, column=1, sticky=tk.NSEW)
 
     # Widget for send button
     def setup_send_button(self):
         # Calls send function when enter is pressed
         self.send_btn = tk.Button(self.chat_window,
-                                  text="Send", 
+                                  text="Send",
+                                  font=(self.font_name, 12 * self.font_size), 
+                                  bg="#86d19a",
                                   command=lambda: self.send_msg())
         self.send_btn.grid(row=1, column=2, sticky=tk.NSEW)
         self.send_btn.bind("<Return>", lambda *args: self.send_msg())

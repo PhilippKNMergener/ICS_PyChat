@@ -35,33 +35,31 @@ class Main_GUI:
         # GUI variables
         self.e_build = Emoji()
         self.input_message: str = ""
-        self.font_name = "Comic Sans MS"
+        self.font_name = "Calibri"
         self.font_size = 1
 
         # initiate the root tcl object for GUI
         self.root = tk.Tk()
         self.root.withdraw()
-        
-        
 
     ### UI Elements Setup Methods ###
-    # TODO: Design cleaner layout 
-    # TODO: Scrolling implementation
-    # TODO: Sidebar of group
 
-    def launch_login_window():
+    def launch_login_window(self):
         self.login_window = tk.Toplevel()
         self.login_window.title("PyChat - Login")
         self.login_window.resizable(width=False,
-                               height=False)
+                                    height=False)
         self.login_window.configure(width=800, 
                                     height=500)
-        self.login_title = tk.Label(text="Welcome to PyChat \n \
+        self.login_title = tk.Label(self.login_window, text=" Welcome to PyChat ".center(80, "~") +"\n \
                                         please enter your username")
-        self.user_name_input = tk.Entry()
-        self.login_btn = tk.Button(text="Login", 
-                                   command = self.login(self.user_name_input.get()))
-        
+        self.login_title.grid(row=0)
+        self.user_name_input = tk.Entry(self.login_window)
+        self.user_name_input.grid(row=2)
+        self.login_btn = tk.Button(self.login_window, text="Login", 
+                                   command = lambda: self.login(self.user_name_input.get()))
+        self.login_btn.grid(row=3)
+        self.root.mainloop()
          
     # New window for the group chat
     def setup_chat_window(self):
@@ -73,7 +71,7 @@ class Main_GUI:
         self.chat_window.configure(
                                     width=800, 
                                     height=800)
-
+        self.window_width = 78
         self.setup_chat_box()
         self.setup_input_bar()
         
@@ -88,20 +86,18 @@ class Main_GUI:
     # Widget for user chat input
     def setup_input_bar(self):
         self.setup_input_field()
-        self.setup_input_spacer()
         self.setup_send_button()
 
     # Widget for user input field
     def setup_input_field(self):
         self.input_field = tk.Entry(self.chat_window)
-        self.input_field.grid(row=1, column=0, sticky=tk.NSEW)
+        self.input_field.grid(row=1, columnspan=2, sticky=tk.NSEW)
         self.input_field.bind("<Return>", lambda *args: self.send_msg())
     
     # Widget to space input field and send button
-    # Not for use
-    def setup_input_spacer(self):
-        self.input_spacer = Spacer(self.chat_window) 
-        self.input_spacer.grid(row=1, column=1, sticky=tk.NSEW)
+    #def setup_input_spacer(self):
+    #    self.input_spacer = Spacer(self.chat_window) 
+    #    self.input_spacer.grid(row=1, column=1, sticky=tk.NSEW)
 
     # Widget for send button
     def setup_send_button(self):
@@ -109,7 +105,7 @@ class Main_GUI:
         self.send_btn = tk.Button(self.chat_window,
                                   text="Send", 
                                   command=lambda: self.send_msg())
-        self.send_btn.grid(row=1, column=3, sticky=tk.NSEW)
+        self.send_btn.grid(row=1, column=2, sticky=tk.NSEW)
         self.send_btn.bind("<Return>", lambda *args: self.send_msg())
     
     ### Action Methods ###
@@ -129,13 +125,13 @@ class Main_GUI:
                     if words[0] == "!help":
                         self.post_to_chat_box(cu.menu)
                     elif words[0] == "!emoji":
-                        emoji_menu = "Emoji Shortcuts: \n" + "\n ".join([f" {k}  -->  {v}" for k,v in self.e_build.shortcuts.items()]) + "\n"
+                        emoji_menu = "Emoji Shortcuts".center(self.window_width, "~") + "\n" + "\n ".join([f"      {k.ljust(10, '-')} > {v}" for k,v in self.e_build.shortcuts.items()]) + "\n"
                         self.post_to_chat_box(emoji_menu)
                     else:
                         self.my_msg = plain_text[1:]
                 else:
-                    invalid_command = "Command not recognized \n \
-                                type !help for command menu"
+                    invalid_command = "Command not recognized".center(self.window_width, "~") + "\n \
+                                        type !help for command menu"
                     self.post_to_chat_box(invalid_command)
             else:
                 if self.state_machine.state != cu.S_CHATTING:
@@ -151,7 +147,7 @@ class Main_GUI:
 
     def post_to_chat_box(self, msg):
         self.chat_box.config(state=tk.NORMAL)
-        self.chat_box.insert(tk.END, msg)
+        self.chat_box.insert(tk.END, "\n" + msg)
         self.chat_box.config(state=tk.DISABLED)
         self.chat_box.see(tk.END)
 
@@ -178,6 +174,7 @@ class Main_GUI:
             
 
     def login(self, name):
+        self.login_window.destroy()
         msg = json.dumps({"action": "login","name": name})
         self.send(msg)
         response = json.loads(self.recv())
@@ -187,9 +184,11 @@ class Main_GUI:
             self.state_machine.set_myname(name)
 
             # initialize chat window
+            print("setting up chat window")
             self.setup_chat_window()
             
-            # print menu
+            # print start messages
+            self.post_to_chat_box(f"  Welcome {name}!  ".center(self.window_width+4, '*') + "\n\n")
             self.post_to_chat_box(cu.menu)
             
         # the thread to receive messages
@@ -201,8 +200,9 @@ class Main_GUI:
     
     # Call this to start GUI
     def run(self):
-        name = f"test{random.randint(0, 10)}"
-        self.login(name)
+        self.launch_login_window()
+        #name = f"test{random.randint(0, 10)}"
+        #self.login(name)
                 
 
 # Testint case (no send or receive functionalities)

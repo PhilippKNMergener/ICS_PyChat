@@ -9,7 +9,7 @@ CHAT_IP = socket.gethostbyname(socket.gethostname())
 CHAT_PORT = 1112
 SERVER = (CHAT_IP, CHAT_PORT)
 
-menu = "\n++++ Choose one of the following commands\n \
+menu = " Commands Menu ".center(78, "~") + "\n\n \
         !time: get the current time\n \
         !who: to find out who else are there\n \
         !c [username]: to connect to [username] and chat\n \

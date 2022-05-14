@@ -66,12 +66,12 @@ class ClientSM:
                 elif my_msg == 'time':
                     mysend(self.s, json.dumps({"action":"time"}))
                     time_in = json.loads(myrecv(self.s))["results"]
-                    self.out_msg += "Time is: " + time_in
+                    self.out_msg += "\nTime is: " + time_in + '\n'
 
                 elif my_msg == 'who':
                     mysend(self.s, json.dumps({"action":"list"}))
                     logged_in = json.loads(myrecv(self.s))["results"]
-                    self.out_msg += 'Here are all the users in the system:\n'
+                    self.out_msg += '\nHere are all the users in the system:\n'
                     self.out_msg += logged_in
 
                 elif my_msg[0] == 'c':
@@ -79,19 +79,19 @@ class ClientSM:
                     peer = peer.strip()
                     if self.connect_to(peer) == True:
                         self.state = S_CHATTING
-                        self.out_msg += 'Connect to ' + peer + '. Chat away!\n\n'
+                        self.out_msg += '\nConnect to ' + peer + '. Chat away!\n\n'
                         self.out_msg += '-----------------------------------\n'
                     else:
-                        self.out_msg += 'Connection unsuccessful\n'
+                        self.out_msg += '\nConnection unsuccessful\n'
 
                 elif my_msg[0] == '?':
                     term = my_msg[1:].strip()
                     mysend(self.s, json.dumps({"action":"search", "target":term}))
                     search_rslt = json.loads(myrecv(self.s))["results"].strip()
                     if (len(search_rslt)) > 0:
-                        self.out_msg += search_rslt + '\n\n'
+                        self.out_msg += '\n' + search_rslt + '\n\n'
                     else:
-                        self.out_msg += '\'' + term + '\'' + ' not found\n\n'
+                        self.out_msg += '\n' + '\'' + term + '\'' + ' not found\n\n'
 
                 elif my_msg[0] == 'p' and my_msg[1:].isdigit():
                     poem_idx = my_msg[1:].strip()
@@ -101,7 +101,7 @@ class ClientSM:
                     if (len(poem) > 0):
                         self.out_msg += poem + '\n\n'
                     else:
-                        self.out_msg += 'Sonnet ' + poem_idx + ' not found\n\n'
+                        self.out_msg += '\nSonnet ' + poem_idx + ' not found\n\n'
 
                 else:
                     self.out_msg += menu
@@ -110,7 +110,7 @@ class ClientSM:
                 peer_msg = json.loads(peer_msg)
                 if peer_msg["action"] == "connect":
                     self.peer = peer_msg["from"]
-                    self.out_msg += 'Request from ' + self.peer + '\n'
+                    self.out_msg += '\nRequest from ' + self.peer + '\n'
                     self.out_msg += 'You are connected with ' + self.peer
                     self.out_msg += '. Chat away!\n\n'
                     self.out_msg += '------------------------------------\n'

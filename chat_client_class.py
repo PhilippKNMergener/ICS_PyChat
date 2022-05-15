@@ -2,7 +2,6 @@ import socket
 import sys
 from chat_utils import *
 import client_state_machine as csm
-from GUI import *
 import Main_GUI as gui
 
 

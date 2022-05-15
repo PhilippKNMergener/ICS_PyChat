@@ -69,12 +69,11 @@ class Encrypt():
         return newword
 
     def decrypt_add_letters(x):
+        #return "".join([letter for i, letter in enumerate(x) if i%2 == 0])
         oldword = ''
-        y = list(x)
-        for i in y[1::2]:
-                y.remove(i)
-        for o in y:
-            oldword += o
+        for i, letter in enumerate(x):
+            if i%2 == 0:
+                oldword += letter
         return oldword
 
     # generate a random key with param length
@@ -89,29 +88,6 @@ class Encrypt():
 
     # Main class methods
 
-    #for philipp: i have been trying to find a way to use the encryption functions inside this encrypt_message() function
-    #but somehow thats not the pyhton syntax. What I wanna do is use the return values from encryption functions above in this
-    # function so I can generate an encrypted message and same for the key to which I wanna assign the returned value of
-    # the random_key() function. My guess is there is something I need to add to the initializing function.
-    #  Any suggestions or hints how to tackle this? 
-
-    # RAO: there are a few ways to achive this 
-    # First of all if you're already getting a "message" as a parameter for the function you don't need to ask the user for input for a message to encrypt just use the value passed in through the parameter
-    # second when you say "random_key" or any method within the encrypt class you need to tell the interpreter that it is a method of that class
-    # try using Encrypt.random_key() instead
-    # 
-    # Second of all (This is a little higher level but bear with me)
-    # This class is only used to contain the methods for encrypting and decrypting, this means that you dont actually care about the object itself
-    # Because of this you can remove the self parameter from the methods meaning that when you want to call method in this class you will use the same format    
-    # ex: method called: "encrypt_message" call: Encrypt.encrypt_message(message)
-    # 
-    # I added a test case at the bottom of the file which should work once those changes are made
-
-    #for philipp: error solved and checked through your test code. Thanks to you!
-
-    #philipp: im having trouble with looping the key backwards. I've tries some help from google too but shit ain't workin. Secondly,
-    #the decrypt add letter function is constantly being a mess. It is not deleting the characters added. I have tried numerous
-    #ways but same result. Please have a look and lemme know if something seems shady to you.
 
     def encrypt_message(message):
         # TODO: encrypt message and return encrypted (message, key)
@@ -136,13 +112,6 @@ class Encrypt():
         return (encrypted, key)
 
 
-    # philipp: the decryption function is working now. Had to mess with the test code a bit to check it. Please let me know if there's
-    # a problem with that. Secondly, the decryption logic is being a lil-b. The decrypt add letters function is not doing
-    #what I want to do. Messed with it a hundred times but still the same response. It;s not deleting the added characters.
-    # Please take a look if u have time and let me know if u see somethn sus in there. I will look at it again after waking up,
-    #might be able to crack it w a fresh mind. Also, please run this and point out any other errors too u find it and I will correct
-    #them asap so I can move on to fitting this into the chat system. Thank you!!
-
     def decrypt_message(encrypted, key):
         # TODO: decrypt message and return the original string
 
@@ -151,90 +120,23 @@ class Encrypt():
         #decrypted = encrypted
         decrypted = encrypted
 
-        # This should not be necessary
-        # Taking the letters out should happen in order as well as this may affect the other decryption methods
-        
-            # 1. to decrypt the key needs to be read backwards
-            # 2. When you call the decryption methods you are giving them "encrypted" not "decrypted" which is the one you are modifying
-            #
-        
-        for i in list(reversed(key)): # this is just something that is worth memorizing for reversing iterable objects
-
+        for i in list(reversed(key)):
             if i == "F":
-                decrypted = Encrypt.decrypt_flip(decrypted) # You're still changing the input instead of the string you are decrypting this should be decrypted not encryted.
+                decrypted = Encrypt.decrypt_flip(decrypted) 
+                print("*  decrypt flip", decrypted)
             if i == "L":
                 decrypted = Encrypt.decrypt_shift_left(decrypted)
+                print("* decrypt left shift", decrypted)
             if i == "R":
                 decrypted = Encrypt.decrypt_shift_right(decrypted)
+                print("* decrypt right shift", decrypted)
             if i == "A":
                 decrypted = Encrypt.decrypt_add_letters(decrypted)
+                print("* decrypt add", decrypted)
 
         
         return (decrypted)
     
-# Commented so that they wont cause extra imports when this file is used as a module in the other files
-
-#
-#def ascii_shift(a,b):
-#    value = ''
-#    for c in a:
-#        if c.isupper():
-#            if b >= 26:
-#                b = b%26
-#            elif b <= -26:
-#                b = b % -26
-#            letter = c
-#            value += chr(ord(letter) + b)
-#        else:
-#            value += c        
-#    return value
-#
-##function #2
-#
-#def shift_right(d):
-#    new_word = d[-1] + d[0:len(d)-1]
-#    return new_word
-#
-#
-#
-##function #3
-#
-#def shift_left(e):
-#    newword = e[1:len(e)] + e[0]
-#    return newword
-#
-#
-#
-##function #4
-#
-#def flip(f):
-#    if len(f) % 2 == 0:
-#        newword = f[int(len(f)/2):] + f[0:int(len(f)/2)]
-#    else:
-#        newword = f[(len(f)//2)+1:] + f[len(f)//2] + f[0:(len(f)//2)]
-#    return newword
-#
-#
-#
-##function #5
-#
-#def add_letters(a,b):
-#    newword = ''
-#    for i in a:
-#        newword += i
-#        for _ in range(b):
-#            newword += random.choice(string.ascii_letters)
-#    return newword.upper()
-#
-#
-#
-##function #6
-#
-#def delete_characters(a,b):
-#    newword = a[0::b+1]
-#    return newword
-
-# Test cases
 
 if __name__ == "__main__":
     print("\n\n\n")
@@ -245,43 +147,3 @@ if __name__ == "__main__":
     print(Encrypt.decrypt_message(encrypted_msg, key2))
     print("\n\n\n")
 
-"""
-if __name__ == "__main__":
-    while True:
-        
-        pattern = input("Enter an encoding pattern, 'end' to end: ").upper()
-
-        if pattern == "END":
-            print("Program ending")
-            break
-        
-        word = input("Enter a word to encode/decode: ").upper()
-
-        for i in pattern:
-            if i == ("U"):
-                print("* ASCII shift up:", ascii_shift(word,1))
-                word = ascii_shift(word,1)
-            elif i == ("D"):
-                print("* ASCII shift down:", ascii_shift(word,-1))
-                word = ascii_shift(word,-1)
-            elif i == ("A"):
-                print("* Added 1 letter:", add_letters(word,1))
-                word = add_letters(word,1)
-            elif i == ("X"):
-                print("* Deleted 1 character:", delete_characters(word,1))
-                word = delete_characters(word,1)
-            elif i == ("F"):
-                print("* Flipped:", flip(word))
-                word = flip(word)
-            elif i == ("R"):
-                print("* Shifted right:", shift_right(word))
-                word = shift_right(word)
-            elif i == ("L"):
-                print("* Shifted left:", shift_left(word))
-                word = shift_left(word)
-            else:
-                print("* "+i+" is an invalid command, ignoring")
-                
-        print("Final encoding / decoding:",word)
-        print()
-"""
